@@ -11,25 +11,26 @@ function onDragStartPvm(source, piece, position, orientation) {
   if (piece.search(`^${user == "b" ? "w" : "b"}`) !== -1) return false;
 }
 
-function requestMove() {
-  var possibleMoves = game.moves();
-
-  if (possibleMoves.length === 0) return;
-
-  var randomIdx = Math.floor(Math.random() * possibleMoves.length);
-  game.move(possibleMoves[randomIdx]);
-  boardPvm.position(game.fen());
-}
-
-function makeRandomMove() {
-  var possibleMoves = game.moves();
-
-  // game over
-  if (possibleMoves.length === 0) return;
-
-  var randomIdx = Math.floor(Math.random() * possibleMoves.length);
-  game.move(possibleMoves[randomIdx]);
-  boardPvm.position(game.fen());
+function requestMove(source, target) {
+  fetch("/getmove", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ from: source, to: target }),
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      console.log(data["from"], data["to"]);
+      game.move({
+        from: data["from"],
+        to: data["to"],
+        promotion: "q",
+      });
+      boardPvm.position(game.fen());
+      updateStatus();
+    });
+  console.log(source, target);
 }
 
 function onDropPvm(source, target) {
@@ -42,8 +43,10 @@ function onDropPvm(source, target) {
   // illegal move
   if (move === null) return "snapback";
 
-  // make random legal move for black
-  window.setTimeout(makeRandomMove, 250);
+  boardPvm.position(game.fen());
+
+  // make legal move
+  requestMove(source, target);
 
   updateStatus();
 }
