@@ -1,5 +1,5 @@
 # class Config:
-DEPTH = 6
+DEPTH = 4
 
 point = {
 '1':{'value':0,
