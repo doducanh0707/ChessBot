@@ -16,6 +16,18 @@ piece_value = {
     chess.KING: 20000
 }
 
+<<<<<<< HEAD
+=======
+piece_value = {
+    chess.PAWN: 100,
+    chess.ROOK: 500,
+    chess.KNIGHT: 320,
+    chess.BISHOP: 330,
+    chess.QUEEN: 900,
+    chess.KING: 20000
+}
+
+>>>>>>> 3cc4c369cc6be61c10ac7a555e72aaf0e14408b0
 pawnEvalWhite = [
     0,  0,  0,  0,  0,  0,  0,  0,
     5, 10, 10, -20, -20, 10, 10,  5,
@@ -139,12 +151,7 @@ class MyChessBoard:
 
     def turn(self):
         return self.board.turn
-
     def fit(self):
-        if self.board.is_checkmate():
-            if self.board.turn:
-                return -9999
-            else: return 9999 
             
         fen = self.board.board_fen()
 
@@ -159,17 +166,31 @@ class MyChessBoard:
 
         fitness = 0
         # diem cong dua tren vi tri quan co chi huu dung khi khai cuoc
-        if self.board.fullmove_number<12:
-            for i in range(64):
-                fitness += (point[fen[i]]['value'] + point[fen[i]]['pos'][i])
-        else: 
-            for i in range(64):
-                fitness += point[fen[i]]['value']
-
+    
+        for i in range(64):
+            fitness += (point[fen[i]]['value'] + point[fen[i]]['pos'][i])
         return fitness
     def newgame(self):
         self.board = chess.Board()
 
+<<<<<<< HEAD
+=======
+    def check_end_game(self):
+        queens = 0
+        minors = 0
+        for square in chess.SQUARES:
+            piece = self.board.piece_at(square)
+            if piece and piece.piece_type == chess.QUEEN:
+                queens += 1
+            if piece and (piece.piece_type == chess.BISHOP or piece.piece_type == chess.KNIGHT):
+                minors += 1
+
+        if queens == 0 or (queens == 2 and minors <= 1):
+            return True
+
+        return False  
+
+>>>>>>> 3cc4c369cc6be61c10ac7a555e72aaf0e14408b0
     def evaluate_board(self):
         total = 0
         end_game = self.check_end_game
@@ -182,6 +203,7 @@ class MyChessBoard:
             total += value if piece.color == chess.WHITE else -value
 
         return total
+<<<<<<< HEAD
 
     def is_draw(self):
         if self.board.is_stalemate():
@@ -202,3 +224,7 @@ class MyChessBoard:
         # If There is checkmate then it will be TRUE else FALSE.It will be a boolean value.
         return self.board.is_checkmate()
 
+=======
+        
+        
+>>>>>>> 3cc4c369cc6be61c10ac7a555e72aaf0e14408b0
